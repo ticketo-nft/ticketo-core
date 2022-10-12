@@ -6,13 +6,14 @@ import "../common/access/Ownable.sol";
 import "../common/token/ERC721/extensions/ERC721Burnable.sol";
 import "../common/token/ERC20/utils/SafeERC20.sol";
 import "../common/token/ERC20/IERC20.sol";
+import "./interfaces/ITicket.sol";
 
 
-contract Ticket is ERC721Burnable, Ownable {
+contract Ticket is ITicket, ERC721, Ownable {
     using SafeERC20 for IERC20;
     struct TicketInfo {
-        address ev;
-        uint256 seat;
+        uint256 index;
+        uint80 seat;
         uint256 schedule;
         uint256 price;
     }
@@ -23,16 +24,11 @@ contract Ticket is ERC721Burnable, Ownable {
 
     constructor() ERC721("Ticketo-Ticket", ""){}
 
-    function mint(address _account, address _ev, uint256 _seat, uint256 _schedule, uint256 _price) {
+    function mint(address _account, uint256 _index, uint256 _schedule, uint80 _seat, uint256 _price) external override virtual {
         require(msg.sender == factory);
         uint256 ticketId = ticketInfos.length;
-        ticketInfos.push(TicketInfo(_ev, _seat, _schedule, _price));
+        ticketInfos.push(TicketInfo(_index, _seat, _schedule, _price));
         _mint(_account, ticketId);
-    }
-
-    function burn(uint256 tokenId) public virtual override {
-        require(msg.sender == factory);
-        super._burn(tokenId);
     }
 
     function withdrawAdminFee() external {
