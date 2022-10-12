@@ -3,13 +3,13 @@
 pragma solidity ^0.8.0;
 
 import "../common/access/Ownable.sol";
-import "../common/token/ERC721/extensions/ERC721Burnable.sol";
 import "../common/token/ERC20/utils/SafeERC20.sol";
 import "../common/token/ERC20/IERC20.sol";
 import "./interfaces/ITicket.sol";
+import "../common/token/ERC721/extensions/ERC721Enumerable.sol";
 
 
-contract Ticket is ITicket, ERC721, Ownable {
+contract Ticket is ITicket, ERC721Enumerable, Ownable {
     using SafeERC20 for IERC20;
     struct TicketInfo {
         uint256 index;
